@@ -27,7 +27,7 @@ class COCODataset(Dataset):
     def __init__(self,
                  root_path="./datasets/COCO", data_version="train2017", is_train=True, use_gt_bboxes=True, bbox_path="",
                  image_width=288, image_height=384, color_rgb=True,
-                 scale=True, scale_factor=0.35, flip_prob=0.5, rotate_prob=0.5, rotation_factor=45., half_body_prob=0.3,
+                 scale=True, scale_factor=0.35, flip_prob=0.0, rotate_prob=0.0, rotation_factor=45., half_body_prob=0.0,
                  use_different_joints_weight=False, heatmap_sigma=3, soft_nms=False,
                  ):
         """
@@ -164,8 +164,8 @@ class COCODataset(Dataset):
                 valid_objs = []
                 for obj in objs:
                     # Skip non-person objects (it should never happen)
-                    if obj['category_id'] != 1:
-                        continue
+                    # if obj['category_id'] != 1:
+                    #     continue
 
                     # ignore objs without keypoints annotation
                     if max(obj['keypoints']) == 0:
