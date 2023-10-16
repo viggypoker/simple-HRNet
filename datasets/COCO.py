@@ -27,7 +27,7 @@ class COCODataset(Dataset):
     def __init__(self,
                  root_path="./datasets/COCO", data_version="train2017", is_train=True, use_gt_bboxes=True, bbox_path="",
                  image_width=288, image_height=384, color_rgb=True,
-                 scale=True, scale_factor=0.35, flip_prob=0.0, rotate_prob=0.0, rotation_factor=45., half_body_prob=0.0,
+                 scale=True, scale_factor=0.35, flip_prob=0.5, rotate_prob=0.5, rotation_factor=45., half_body_prob=0.0,
                  use_different_joints_weight=False, heatmap_sigma=3, soft_nms=False,
                  ):
         """
@@ -110,7 +110,7 @@ class COCODataset(Dataset):
 
         self.nof_joints = 17
         self.nof_joints_half_body = 8
-        self.flip_pairs = [[1, 2], [3, 4], [5, 6], [7, 8], [9, 10], [11, 12], [13, 14], [15, 16]]
+        self.flip_pairs = [[0,1],[5,8],[6,9],[7,10],[11,14],[12,15],[13,16]]
         self.upper_body_ids = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
         self.lower_body_ids = [11, 12, 13, 14, 15, 16]
         self.joints_weight = np.asarray(
@@ -165,7 +165,7 @@ class COCODataset(Dataset):
                 for obj in objs:
                     # Skip non-person objects (it should never happen)
                     # if obj['category_id'] != 1:
-                    #     continue
+                        # continue
 
                     # ignore objs without keypoints annotation
                     if max(obj['keypoints']) == 0:
