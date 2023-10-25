@@ -151,7 +151,7 @@ if __name__ == '__main__':
                         type=str, default=None)
     parser.add_argument("--seed", "-s", help="seed", type=int, default=1)
     parser.add_argument("--device", "-d", help="device", type=str, default=None)
-    parser.add_argument("--dropout",help="Use dropout layer", action="store_true")
+    parser.add_argument("--use_dropout",help="Use dropout layer", action="store_true")
     args = parser.parse_args()
 
     main(**args.__dict__)

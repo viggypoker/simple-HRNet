@@ -3,7 +3,7 @@ from torch import nn
 from models_.modules import BasicBlock, Bottleneck
 
 
-class DropoutModule(nn.Moduel):
+class DropoutModule(nn.Module):
     def __init__(self,input_branches,output_branches,bn_momentum):
         super(DropoutModule,self).__init__()
         self.layer1=nn.Sequential(
