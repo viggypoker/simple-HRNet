@@ -50,7 +50,8 @@ class Train(object):
                  model_nof_joints=17,
                  model_bn_momentum=0.1,
                  flip_test_images=True,
-                 device=None
+                 device=None,
+                 use_dropout=False
                  ):
         """
         Initializes a new Train object.
@@ -132,7 +133,7 @@ class Train(object):
         self.model_bn_momentum = model_bn_momentum
         self.flip_test_images = flip_test_images
         self.epoch = 0
-
+        self.use_dropout=use_dropout
         # torch device
         if device is not None:
             self.device = device
@@ -159,7 +160,7 @@ class Train(object):
         #
         # load model
         self.model = HRNet(c=self.model_c, nof_joints=self.model_nof_joints,
-                           bn_momentum=self.model_bn_momentum).to(self.device)
+                           bn_momentum=self.model_bn_momentum,use_dropout=self.use_dropout).to(self.device)
 
         #
         # define loss and optimizers
@@ -270,7 +271,7 @@ class Train(object):
     def _val(self):
         self.model.eval()
 
-        with torch.no_grad():
+        with torch.inference_mode():
             for step, (image, target, target_weight, joints_data) in enumerate(tqdm(self.dl_val, desc='Validating')):
                 image = image.to(self.device)
                 target = target.to(self.device)

@@ -37,7 +37,9 @@ def main(exp_name,
          coco_root_path="./datasets/COCO",
          coco_bbox_path=None,
          seed=1,
-         device=None):
+         device=None,
+         use_dropout=False
+         ):
 
     # Seeds
     random.seed(seed)
@@ -105,7 +107,8 @@ def main(exp_name,
         model_nof_joints=model_nof_joints,
         model_bn_momentum=model_bn_momentum,
         flip_test_images=flip_test_images,
-        device=device
+        device=device,
+        use_dropout=use_dropout
     )
 
     train.run()
@@ -148,6 +151,7 @@ if __name__ == '__main__':
                         type=str, default=None)
     parser.add_argument("--seed", "-s", help="seed", type=int, default=1)
     parser.add_argument("--device", "-d", help="device", type=str, default=None)
+    parser.add_argument("--dropout",help="Use dropout layer", action="store_true")
     args = parser.parse_args()
 
     main(**args.__dict__)

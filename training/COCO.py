@@ -39,7 +39,8 @@ class COCOTrain(Train):
                  model_nof_joints=17,
                  model_bn_momentum=0.1,
                  flip_test_images=True,
-                 device=None
+                 device=None,
+                 use_dropout=False
                  ):
         """
         Initializes a new COCOTrain object which extends the parent Train class.
@@ -195,7 +196,7 @@ class COCOTrain(Train):
         image_paths = []
         idx = 0
         self.model.eval()
-        with torch.no_grad():
+        with torch.inference_mode():
             for step, (image, target, target_weight, joints_data) in enumerate(tqdm(self.dl_val, desc='Validating')):
                 image = image.to(self.device)
                 target = target.to(self.device)

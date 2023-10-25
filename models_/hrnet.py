@@ -3,6 +3,22 @@ from torch import nn
 from models_.modules import BasicBlock, Bottleneck
 
 
+class DropoutModule(nn.Moduel):
+    def __init__(self,input_branches,output_branches,bn_momentum):
+        super(DropoutModule,self).__init__()
+        self.layer1=nn.Sequential(
+            nn.BatchNorm2d(input_branches, eps=1e-05, momentum=bn_momentum, affine=True, track_running_stats=True),
+            nn.ReLU(inplace=True),
+            nn.Dropout2d(p=0.2),
+            nn.Conv2d(input_branches, output_branches, kernel_size=(1, 1), stride=(1, 1))
+        )
+    
+    def forward(self,x):
+        x=self.layer1(x)
+        return(x)
+
+
+
 class StageModule(nn.Module):
     def __init__(self, stage, output_branches, c, bn_momentum):
         super(StageModule, self).__init__()
@@ -72,9 +88,9 @@ class StageModule(nn.Module):
 
 
 class HRNet(nn.Module):
-    def __init__(self, c=48, nof_joints=17, bn_momentum=0.1):
+    def __init__(self, c=48, nof_joints=17, bn_momentum=0.1,use_dropout=False):
         super(HRNet, self).__init__()
-
+        self.use_dropout = use_dropout
         # Input (stem net)
         self.conv1 = nn.Conv2d(3, 64, kernel_size=(3, 3), stride=(2, 2), padding=(1, 1), bias=False)
         self.bn1 = nn.BatchNorm2d(64, eps=1e-05, momentum=bn_momentum, affine=True, track_running_stats=True)
@@ -154,6 +170,10 @@ class HRNet(nn.Module):
         # Final layer (final_layer)
         self.final_layer = nn.Conv2d(c, nof_joints, kernel_size=(1, 1), stride=(1, 1))
 
+        # Use DropoutModule
+
+        self.dropout_module = nn.Sequential(DropoutModule(nof_joints,nof_joints,bn_momentum))
+
     def forward(self, x):
         x = self.conv1(x)
         x = self.bn1(x)
@@ -185,6 +205,10 @@ class HRNet(nn.Module):
         x = self.stage4(x)
 
         x = self.final_layer(x[0])
+
+        if self.use_dropout:
+            x=self.dropout_module(x)
+
 
         return x
 
