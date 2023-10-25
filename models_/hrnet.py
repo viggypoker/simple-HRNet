@@ -10,7 +10,8 @@ class DropoutModule(nn.Module):
             nn.BatchNorm2d(input_branches, eps=1e-05, momentum=bn_momentum, affine=True, track_running_stats=True),
             nn.ReLU(inplace=True),
             nn.Dropout2d(p=0.2),
-            nn.Conv2d(input_branches, output_branches, kernel_size=(1, 1), stride=(1, 1))
+            nn.Conv2d(input_branches, output_branches, kernel_size=(1, 1), stride=(1, 1)
+                      )
         )
     
     def forward(self,x):
@@ -169,6 +170,8 @@ class HRNet(nn.Module):
 
         # Final layer (final_layer)
         self.final_layer = nn.Conv2d(c, nof_joints, kernel_size=(1, 1), stride=(1, 1))
+        self.final_layer2 = nn.Conv2d(c, nof_joints, kernel_size=(1, 1), stride=(1, 1),bias=False)
+
 
         # Use DropoutModule
 
@@ -204,11 +207,13 @@ class HRNet(nn.Module):
 
         x = self.stage4(x)
 
-        x = self.final_layer(x[0])
 
         if self.use_dropout:
+            x = self.final_layer2(x[0])
             x=self.dropout_module(x)
 
+        else:
+            x = self.final_layer(x[0])
 
         return x
 
