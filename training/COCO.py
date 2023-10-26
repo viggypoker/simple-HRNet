@@ -117,7 +117,8 @@ class COCOTrain(Train):
             model_nof_joints=model_nof_joints,
             model_bn_momentum=model_bn_momentum,
             flip_test_images=flip_test_images,
-            device=device
+            device=device,
+            use_dropout=use_dropout
         )
 
     def _train(self):
