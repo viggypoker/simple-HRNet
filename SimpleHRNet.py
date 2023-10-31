@@ -34,7 +34,8 @@ class SimpleHRNet:
                  yolo_class_path="./models_/detectors/yolo/data/coco.names",
                  yolo_weights_path="./models_/detectors/yolo/weights/yolov3.weights",
                  device=torch.device("cpu"),
-                 enable_tensorrt=False):
+                 enable_tensorrt=False,
+                 use_dropout=False):
         """
         Initializes a new SimpleHRNet object.
         HRNet (and YOLOv3) are initialized on the torch.device("device") and
@@ -97,6 +98,7 @@ class SimpleHRNet:
         self.yolo_weights_path = yolo_weights_path
         self.device = device
         self.enable_tensorrt = enable_tensorrt
+        self.use_dropout=use_dropout
 
         if self.multiperson:
             if self.yolo_version == 'v3':
@@ -107,7 +109,7 @@ class SimpleHRNet:
                 raise ValueError('Unsopported YOLO version.')
 
         if model_name in ('HRNet', 'hrnet'):
-            self.model = HRNet(c=c, nof_joints=nof_joints)
+            self.model = HRNet(c=c, nof_joints=nof_joints,use_dropout=use_dropout)
         elif model_name in ('PoseResNet', 'poseresnet', 'ResNet', 'resnet'):
             self.model = PoseResNet(resnet_size=c, nof_joints=nof_joints)
         else:

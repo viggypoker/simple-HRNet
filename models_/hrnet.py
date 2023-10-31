@@ -170,8 +170,8 @@ class HRNet(nn.Module):
 
         # Final layer (final_layer)
         self.final_layer = nn.Conv2d(c, nof_joints, kernel_size=(1, 1), stride=(1, 1))
-        self.final_layer2 = nn.Conv2d(c, nof_joints, kernel_size=(1, 1), stride=(1, 1),bias=False)
-        self.dropout_module = nn.Sequential(DropoutModule(nof_joints,nof_joints,bn_momentum))
+        self.final_layer2 = nn.Conv2d(c, c, kernel_size=(1, 1), stride=(1, 1),bias=False)
+        self.dropout_module = nn.Sequential(DropoutModule(c,nof_joints,bn_momentum))
 
     def forward(self, x):
         x = self.conv1(x)
