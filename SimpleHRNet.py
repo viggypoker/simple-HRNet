@@ -118,7 +118,7 @@ class SimpleHRNet:
         if not self.enable_tensorrt:
             checkpoint = torch.load(checkpoint_path, map_location=self.device)
             if 'model' in checkpoint:
-                self.model.load_state_dict(checkpoint['model'])
+                self.model.load_state_dict(checkpoint['model'],strict=False)
             else:
                 self.model.load_state_dict(checkpoint)
 
